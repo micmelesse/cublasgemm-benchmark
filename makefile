@@ -1,4 +1,4 @@
-CUDA_ARCH_FLAGS ?= -arch=sm_35
+CUDA_ARCH_FLAGS ?= -arch=sm_70,sm_60_sm_61,sm_50,sm_35
 CC_FLAGS += -lcublas
 # CC_FLAGS += -lcurand
 # CC_FLAGS += -Xptxas
