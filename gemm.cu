@@ -60,9 +60,9 @@ void CPU_fill_rand(float *A, int nr_rows_A, int nr_cols_A) {
 int main(int argc, char ** argv){
 
 
-  int min_m_k_n = 2;
-  int max_m_k_n = 4096*4;
-  int repeats = 2;
+  int min_m_k_n = 64; // min matrix size
+  int max_m_k_n = 5760; // max matrix size
+  int repeats = 1;
   int verbose = 1;
 
 #ifndef FP16MM
@@ -137,7 +137,7 @@ int main(int argc, char ** argv){
   cudaEventCreate(&start);
   cudaEventCreate(&stop);
 
-  for(int size = min_m_k_n; size <= max_m_k_n; size=size*2){
+  for(int size = min_m_k_n; size <= max_m_k_n; size=size+64){ // step size
     double sum = 0.0;
     for(int rep = 0; rep < repeats; rep++){
       cudaEventRecord(start, 0);
