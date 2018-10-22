@@ -139,7 +139,7 @@ int main(int argc, char ** argv){
 
   for(int size = min_m_k_n; size <= max_m_k_n; size=size+64){ // step size
     float sum = 0.0;
-    int ops = 0;
+    unsigned int ops = 0;
     for(int rep = 0; rep < repeats; rep++){
       cudaEventRecord(start, 0);
 	  m=n=k=size;
@@ -167,8 +167,9 @@ int main(int argc, char ** argv){
       sum += elapsed;
     }
     float time = sum/repeats;
-    float gflops = (float)ops; 
+    float gflops = (float)ops;
     gflops /= time;
+    gflops /= 1e9;
 #ifndef FP16MM	
   cout << ", matrix (32): " 
 #else
