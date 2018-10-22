@@ -165,16 +165,14 @@ int main(int argc, char ** argv){
       sum += elapsed;
     }
     float time = sum/repeats;
-    int ops = (size*size*size)*2;
-    cout << " ops: " << ops;
 #ifndef FP16MM	
-  cout << ", matrix (32): " 
+  cout << " matrix (32): " 
 #else
-  cout << ", matrix (16): " 
+  cout << " matrix (16): " 
 #endif
   << size << ", average time: " << time << " s "<< endl;
-  // GFLOPS: (m*n*k*2/1e9)/time
-  float gflops = (ops/1e9)/time;
+  // GFLOPS: (m*n*k*2/time)/1e9
+  float gflops = ((size*size*size*2)/time)/1e9;
   cout << " gflops: " << gflops << endl;
 
   }
