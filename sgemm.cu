@@ -164,7 +164,7 @@ int main(int argc, char ** argv){
       sum += elapsed;
     }
     float time = sum/repeats;
-    int ops = (m*n*k)*2;
+    int ops = (size*size*size)*2;
     cout << " ops: " << ops;
 #ifndef FP16MM	
   cout << ", matrix (32): " 
