@@ -148,6 +148,7 @@ int main(int argc, char ** argv){
 	  ldb = k;
     ldc = m;
     gflops = m*n*k*2;
+    cout << " size: " << gflops;
 #ifndef FP16MM
   stat = cublasDgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, m, n, k, alpha, d_A, lda, d_B, ldb, beta, d_C, ldc); 
 #else
@@ -169,11 +170,11 @@ int main(int argc, char ** argv){
     float time = sum/repeats;
     gflops /= time;
 #ifndef FP16MM	
-  cout << "double32: size " 
+  cout << ", matrix (32): " 
 #else
-  cout << "double16: size " 
+  cout << ", matrix (16): " 
 #endif
-  << size << " average: " << time << " s "<< endl;
+  << size << ", average time: " << time << " s "<< endl;
   // GFLOPS: m*n*k*2/time
   cout << " gflops: " << gflops << endl;
 
