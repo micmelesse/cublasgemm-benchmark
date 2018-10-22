@@ -170,7 +170,7 @@ int main(int argc, char ** argv){
   cout << " matrix (16): " 
 #endif
 
-<< size << ", ops: " << (size*size*size)*2 << ", average time: " << time << " s "<< endl;
+<< size << ", ops: " << (size*size*size)*2 << endl << " average time: " << time << " s "<< endl;
 // GFLOPS: (m*n*k*2/time)/1e9
 float gflops = (((float)(size*size*size)*2)/time)/1e9;
 cout << " gflops: " << gflops << endl;
