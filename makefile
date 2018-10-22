@@ -6,7 +6,7 @@ CC_FLAGS += -lcublas
 # CC_FLAGS += -O3
 CC_FLAGS += --std=c++11 $(CUDA_ARCH_FLAGS)
 
-EXE = gemm
+EXE = sgemm dgemm hgemm
 
 all: $(EXE)
 
