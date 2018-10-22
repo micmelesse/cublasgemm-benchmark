@@ -167,6 +167,7 @@ int main(int argc, char ** argv){
       sum += elapsed;
     }
     float time = sum/repeats;
+    gflops /= 1.0f; 
     gflops /= time;
 #ifndef FP16MM	
   cout << ", matrix (32): " 
