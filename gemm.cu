@@ -49,11 +49,11 @@ cublasStatus_t checkCublas(cublasStatus_t result)
 }
 
 // Fill the array A(nr_rows_A, nr_cols_A) with random numbers on CPU
-void CPU_fill_rand(float *A, int nr_rows_A, int nr_cols_A) {
+void CPU_fill_rand(double *A, int nr_rows_A, int nr_cols_A) {
 	int a=1;
 
     for(int i = 0; i < nr_rows_A * nr_cols_A; i++){
-		A[i] = (float)rand()/(float)(RAND_MAX/a);
+		A[i] = (double)rand()/(double)(RAND_MAX/a);
 	}
 }
 
@@ -66,7 +66,7 @@ int main(int argc, char ** argv){
   int verbose = 1;
 
 #ifndef FP16MM
-  cout << "\ncublasSgemm test result:\n" << endl;
+  cout << "\ncublasDgemm test result:\n" << endl;
 #else
   cout << "\ncublasHgemm test result:\n" << endl;
 #endif
@@ -87,9 +87,9 @@ int main(int argc, char ** argv){
   
   // Allocate 3 arrays on CPU
   
-  float *h_A = (float *)malloc(max_m_k_n * max_m_k_n * sizeof(float));
-  float *h_B = (float *)malloc(max_m_k_n * max_m_k_n * sizeof(float));
-  float *h_C = (float *)malloc(max_m_k_n * max_m_k_n * sizeof(float));
+  double *h_A = (double *)malloc(max_m_k_n * max_m_k_n * sizeof(double));
+  double *h_B = (double *)malloc(max_m_k_n * max_m_k_n * sizeof(double));
+  double *h_C = (double *)malloc(max_m_k_n * max_m_k_n * sizeof(double));
   
   CPU_fill_rand(h_A, max_m_k_n, max_m_k_n);
   CPU_fill_rand(h_B, max_m_k_n, max_m_k_n);
@@ -97,20 +97,20 @@ int main(int argc, char ** argv){
 
 #ifndef FP16MM
     // Allocate 3 arrays on GPU
-    float *d_A, *d_B, *d_C;
-    checkCuda(cudaMallocManaged(&d_A, max_m_k_n * max_m_k_n * sizeof(float)));
-    checkCuda(cudaMallocManaged(&d_B, max_m_k_n * max_m_k_n * sizeof(float)));
-    checkCuda(cudaMallocManaged(&d_C, max_m_k_n * max_m_k_n * sizeof(float)));
+    double *d_A, *d_B, *d_C;
+    checkCuda(cudaMallocManaged(&d_A, max_m_k_n * max_m_k_n * sizeof(double)));
+    checkCuda(cudaMallocManaged(&d_B, max_m_k_n * max_m_k_n * sizeof(double)));
+    checkCuda(cudaMallocManaged(&d_C, max_m_k_n * max_m_k_n * sizeof(double)));
     
-    checkCuda(cudaMemcpy(d_A,h_A,max_m_k_n * max_m_k_n * sizeof(float),cudaMemcpyHostToDevice));
-    checkCuda(cudaMemcpy(d_B,h_B,max_m_k_n * max_m_k_n * sizeof(float),cudaMemcpyHostToDevice));
-    checkCuda(cudaMemcpy(d_C,h_C,max_m_k_n * max_m_k_n * sizeof(float),cudaMemcpyHostToDevice));
+    checkCuda(cudaMemcpy(d_A,h_A,max_m_k_n * max_m_k_n * sizeof(double),cudaMemcpyHostToDevice));
+    checkCuda(cudaMemcpy(d_B,h_B,max_m_k_n * max_m_k_n * sizeof(double),cudaMemcpyHostToDevice));
+    checkCuda(cudaMemcpy(d_C,h_C,max_m_k_n * max_m_k_n * sizeof(double),cudaMemcpyHostToDevice));
     
     int lda, ldb, ldc, m, n, k;
-    const float alf = 1.0f;
-    const float bet = 0.0f;
-    const float *alpha = &alf;
-    const float *beta = &bet;
+    const double alf = 1.0f;
+    const double bet = 0.0f;
+    const double *alpha = &alf;
+    const double *beta = &bet;
   
 #else
     
@@ -120,14 +120,14 @@ int main(int argc, char ** argv){
     checkCuda(cudaMallocManaged(&d_C, max_m_k_n * max_m_k_n * sizeof(__half)));
     
     for (int i = 0; i < max_m_k_n * max_m_k_n; i++) {
-      d_A[i] = approx_float_to_half(h_A[i]);
-  	  d_B[i] = approx_float_to_half(h_B[i]);
-  	  d_C[i] = approx_float_to_half(h_C[i]);
+      d_A[i] = approx_double_to_half(h_A[i]);
+  	  d_B[i] = approx_double_to_half(h_B[i]);
+  	  d_C[i] = approx_double_to_half(h_C[i]);
     }
     
     int lda, ldb, ldc, m, n, k;
-    const __half alf = approx_float_to_half(1.0);
-    const __half bet = approx_float_to_half(0.0);
+    const __half alf = approx_double_to_half(1.0);
+    const __half bet = approx_double_to_half(0.0);
     const __half *alpha = &alf;
     const __half *beta = &bet;
 	
@@ -138,22 +138,25 @@ int main(int argc, char ** argv){
   cudaEventCreate(&stop);
 
   for(int size = min_m_k_n; size <= max_m_k_n; size=size+64){ // step size
-    double sum = 0.0;
+
+    float sum = 0.0;
+    float gflops = 0.0;
     for(int rep = 0; rep < repeats; rep++){
       cudaEventRecord(start, 0);
 	  m=n=k=size;
 	  lda = m;
 	  ldb = k;
-	  ldc = m;
+    ldc = m;
+    gflops = m*n*k*2;
 #ifndef FP16MM
-        stat = cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, m, n, k, alpha, d_A, lda, d_B, ldb, beta, d_C, ldc); 
+  stat = cublasDgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, m, n, k, alpha, d_A, lda, d_B, ldb, beta, d_C, ldc); 
 #else
 	stat = cublasHgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, m, n, k, alpha, d_A, lda, d_B, ldb, beta, d_C, ldc); 
 #endif
       cudaEventRecord(stop,0);
       cudaEventSynchronize(stop);
       if(stat != CUBLAS_STATUS_SUCCESS){
-	cerr << "cublasSgemmBatched failed" << endl;
+	cerr << "cublasDgemmBatched failed" << endl;
 	exit(1);
       }
       assert(!cudaGetLastError());
@@ -163,12 +166,16 @@ int main(int argc, char ** argv){
       elapsed /= 1000.0f;
       sum += elapsed;
     }
+    float time = sum/repeats;
+    gflops /= time;
 #ifndef FP16MM	
-  cout << "float32: size " 
+  cout << "double32: size " 
 #else
-  cout << "float16: size " 
+  cout << "double16: size " 
 #endif
-  << size << " average: " << sum/repeats << " s "<< endl;
+  << size << " average: " << time << " s "<< endl;
+  // GFLOPS: m*n*k*2/time
+  cout << " gflops: " << gflops << endl;
 
   }
 
