@@ -140,7 +140,7 @@ int main(int argc, char ** argv){
   for(int size = min_m_k_n; size <= max_m_k_n; size=size+64){ // step size
 
     float sum = 0.0;
-    float gflops = 0.0;
+    int gflops = 0;
     for(int rep = 0; rep < repeats; rep++){
       cudaEventRecord(start, 0);
 	  m=n=k=size;
