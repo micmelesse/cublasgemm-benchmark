@@ -138,13 +138,16 @@ int main(int argc, char ** argv){
   cudaEventCreate(&stop);
 
   for(int size = min_m_k_n; size <= max_m_k_n; size=size+64){ // step size
-    double sum = 0.0;
+    float sum = 0.0;
+    float gflops = 0.0;
     for(int rep = 0; rep < repeats; rep++){
       cudaEventRecord(start, 0);
 	  m=n=k=size;
 	  lda = m;
 	  ldb = k;
-	  ldc = m;
+    ldc = m;
+    gflops = m*n*k*2;
+    cout << " size: " << gflops;
 #ifndef FP16MM
         stat = cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, m, n, k, alpha, d_A, lda, d_B, ldb, beta, d_C, ldc); 
 #else
@@ -163,13 +166,16 @@ int main(int argc, char ** argv){
       elapsed /= 1000.0f;
       sum += elapsed;
     }
+    float time = sum/repeats;
+    gflops /= time;
 #ifndef FP16MM	
-  cout << "float32: size " 
+  cout << ", matrix (32): " 
 #else
-  cout << "float16: size " 
+  cout << ", matrix (16): " 
 #endif
-  << size << " average: " << sum/repeats << " s "<< endl;
-
+  << size << ", average time: " << time << " s "<< endl;
+  // GFLOPS: m*n*k*2/time
+  cout << " gflops: " << gflops << endl;
   }
 
   //Free GPU memory
