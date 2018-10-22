@@ -147,7 +147,7 @@ int main(int argc, char ** argv){
 	  lda = m;
 	  ldb = k;
     ldc = m;
-    gflops = (size^3)*2;
+    gflops = (size*size*size)*2;
     cout << " ops: " << gflops;
 #ifndef FP16MM
   stat = cublasDgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, m, n, k, alpha, d_A, lda, d_B, ldb, beta, d_C, ldc); 
