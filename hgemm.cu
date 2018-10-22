@@ -170,11 +170,10 @@ int main(int argc, char ** argv){
   cout << " matrix (16): " 
 #endif
 
-  int ops = (size*size*size)*2;
-  << size << ", ops: " << ops << ", average time: " << time << " s "<< endl;
-  // GFLOPS: (m*n*k*2/time)/1e9
-  float gflops = (((float)ops)/time)/1e9;
-  cout << " gflops: " << gflops << endl;
+<< size << ", ops: " << (size*size*size)*2 << ", average time: " << time << " s "<< endl;
+// GFLOPS: (m*n*k*2/time)/1e9
+float gflops = (((float)(size*size*size)*2)/time)/1e9;
+cout << " gflops: " << gflops << endl;
   }
 
   //Free GPU memory
