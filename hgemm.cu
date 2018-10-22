@@ -139,15 +139,12 @@ int main(int argc, char ** argv){
 
   for(int size = min_m_k_n; size <= max_m_k_n; size=size+64){ // step size
     float sum = 0.0;
-    int ops = 0;
     for(int rep = 0; rep < repeats; rep++){
       cudaEventRecord(start, 0);
 	  m=n=k=size;
 	  lda = m;
 	  ldb = k;
     ldc = m;
-    ops = (size*size*size)*2;
-    cout << " ops: " << ops;
 #ifndef FP16MM
         stat = cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, m, n, k, alpha, d_A, lda, d_B, ldb, beta, d_C, ldc); 
 #else
@@ -167,6 +164,8 @@ int main(int argc, char ** argv){
       sum += elapsed;
     }
     float time = sum/repeats;
+    int ops = (size*size*size)*2;
+    cout << " ops: " << ops;
 #ifndef FP16MM	
   cout << ", matrix (32): " 
 #else
