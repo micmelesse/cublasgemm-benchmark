@@ -2,17 +2,14 @@
 
 A simple and repeatable benchmark for validating the GPU performance based on cublas matrix multiplication.
 
-Edit:
-Compile with: make
-Run the generated GEMM executables.
+
 
 ## How to run
 
-Make sure your CUDA tool kit is setup (Your `nvcc` is on `$PATH`, shared libraries on `$LD_LIBRARY_PATH`, headers on `$CPATH`). Then execute the following command to start the test:
+* Compile with: make
+* Run the generated GEMM executables.
 
-```shell
-$ ./run.sh
-```
+Make sure your CUDA tool kit is setup (Your `nvcc` is on `$PATH`, shared libraries on `$LD_LIBRARY_PATH`, headers on `$CPATH`).
 
 * The code does `C=alpha*A*B+beta*C` with square matrices A, B and C and repeate 2 times (adjustable to test longer for more stable result). 
 
