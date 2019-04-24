@@ -145,8 +145,13 @@ int main(int argc, char ** argv){
 	  lda = m;
 	  ldb = k;
     ldc = m;
+
+#if (USE_TENSOR_CORES) && (__CUDACC_VER_MAJOR__> 8)
+	  status = cublasSetMathMode(cublas_handle, CUBLAS_TENSOR_OP_MATH);
+#endif
+
 #ifndef FP16MM
-        stat = cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, m, n, k, alpha, d_A, lda, d_B, ldb, beta, d_C, ldc); 
+  stat = cublasSgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, m, n, k, alpha, d_A, lda, d_B, ldb, beta, d_C, ldc); 
 #else
 	stat = cublasHgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, m, n, k, alpha, d_A, lda, d_B, ldb, beta, d_C, ldc); 
 #endif
