@@ -4,10 +4,12 @@ ifeq (,$(HIP_PATH))
 endif
 HIPCC=$(HIP_PATH)/bin/hipcc 
 
-EXE=dgemm_hip_rocm
-CXXFLAGS = -O3 -g -I/opt/rocm/hipblas/include -lhipblas
+EXE=dgemm_rocm_f64 dgemm_rocm_f32 dgemm_rocm_f16 dgemm_rocm_bf16
+CXXFLAGS = -O3 -g -I/opt/rocm/hipblas/include -I/opt/rocm/include -lhipblas -lrocblas
 
-$(EXE): dgemm_hip_rocm.cpp
+all: $(EXE)
+
+% : %.cpp
 	$(HIPCC) $(CXXFLAGS) $^ -o $@
 
 clean:
