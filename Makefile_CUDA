@@ -1,4 +1,4 @@
-CUDA_ARCH_FLAGS ?= -arch=compute_70
+# CUDA_ARCH_FLAGS ?= -arch=compute_70
 CC_FLAGS += -lcublas
 # CC_FLAGS += -lcurand
 # CC_FLAGS += -Xptxas
@@ -16,4 +16,4 @@ all: $(EXE)
 	nvcc $< $(CC_FLAGS) $(LIB_FLAGS) -o $(BUILD_DIR)/$@
 
 clean:
-	rm -f $(EXE)
+	rm -rf $(BUILD_DIR)
