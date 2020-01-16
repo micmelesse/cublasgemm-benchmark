@@ -153,11 +153,12 @@ int main(int argc, char **argv) {
   float avgTime_us = avgTime_ms * 1000.0f;
   float totalSize =
       static_cast<float>(m) * static_cast<float>(n) * static_cast<float>(k);
-  float GFLOPS = totalSize * 2.0f / (avgTime_s * 1000000000.0f);
+  float gflop = totalSize * 2.0f / 1e9;
+  float gflopPerSec = gflop / avgTime_s;
 
   std::cout << transposeA_str << "," << transposeB_str << "," << m << "," << n
             << "," << k << "," << alpha << "," << lda << "," << ldb << ","
-            << beta << "," << ldc << "," << GFLOPS << "," << avgTime_us
+            << beta << "," << ldc << "," << gflopPerSec << "," << avgTime_us
             << std::endl;
 
   // Free GPU memory
