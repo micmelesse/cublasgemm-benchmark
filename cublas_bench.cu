@@ -151,11 +151,14 @@ int main(int argc, char **argv) {
   float avgTime_ms = totalTime_ms / repeats;
   float avgTime_s = avgTime_ms / 1000.0f;
   float avgTime_us = avgTime_ms * 1000.0f;
-  float GFLOPS = (m * n * k * 2 / avgTime_s) / 1e9;
+  float totalSize =
+      static_cast<float>(m) * static_cast<float>(n) * static_cast<float>(k);
+  float GFLOPS = totalSize * 2.0f / (avgTime_s * 1000000000.0f);
 
-  std::cout << transposeA << "," << transposeB << "," << m << "," << n << ","
-            << k << "," << alpha << "," << lda << "," << ldb << "," << beta
-            << "," << ldc << GFLOPS << "," << avgTime_us << std::endl;
+  std::cout << transposeA_str << "," << transposeB_str << "," << m << "," << n
+            << "," << k << "," << alpha << "," << lda << "," << ldb << ","
+            << beta << "," << ldc << "," << GFLOPS << "," << avgTime_us
+            << std::endl;
 
   // Free GPU memory
   cudaFree(d_A);
