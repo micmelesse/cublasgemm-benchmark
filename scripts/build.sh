@@ -1,1 +1,1 @@
-make -C matrixMulCUBLAS/0_Simple/matrixMulCUBLAS/ all
+make -f Makefile_CUDA
