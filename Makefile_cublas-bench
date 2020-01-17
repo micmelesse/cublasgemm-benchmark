@@ -1,4 +1,4 @@
-# CUDA_ARCH_FLAGS ?= -arch=compute_70
+CUDA_ARCH_FLAGS ?= -arch=compute_70
 CC_FLAGS += -lcublas
 # CC_FLAGS += -lcurand
 # CC_FLAGS += -Xptxas
@@ -7,7 +7,7 @@ CC_FLAGS += -lcublas
 CC_FLAGS += --std=c++11 $(CUDA_ARCH_FLAGS)
 BUILD_DIR=build
 
-EXE = cublas_bench
+EXE = cublas-bench
 
 all: $(EXE)
 

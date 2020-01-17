@@ -1,2 +1,2 @@
-make -f Makefile_CUDA clean
-make -f Makefile_CUDA
+make -f Makefile_cublas-bench clean
+make -f Makefile_cublas-bench
