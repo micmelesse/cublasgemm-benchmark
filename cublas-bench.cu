@@ -72,6 +72,16 @@ void CPU_fill_rand(float *A, int nr_rows_A, int nr_cols_A, int batch) {
 
 int main(int argc, char **argv) {
 
+  // print device info
+  int num_devices;
+  cudaGetDeviceCount(&num_devices);
+  for (int i = 0; i < num_devices; i++) {
+    cudaDeviceProp prop;
+    cudaGetDeviceProperties(&prop, i);
+    std::cout << "Device " << i << ": " << prop.name << std::endl;
+  }
+
+  // parse input arguments
   cxxopts::Options options("cublas_bench", "Benchmark Cublas");
   auto opp_adder = options.add_options();
   opp_adder("f", "f", cxxopts::value<std::string>());
@@ -120,11 +130,13 @@ int main(int argc, char **argv) {
     batch = result["batch"].as<int>();
   }
 
+  // execute paramters
   int repeats = 100;
 
   cublasStatus_t stat;
   cublasHandle_t handle;
 
+  // allocate buffers
   checkCublas(cublasCreate(&handle));
   float *h_A, *h_B, *h_C;
   float *d_A, *d_B, *d_C;
@@ -174,6 +186,7 @@ int main(int argc, char **argv) {
         cudaMemcpy(d_C, h_C, m * n * sizeof(float), cudaMemcpyHostToDevice));
   }
 
+  // call Sgemm repeatdly
   cudaEvent_t start, stop;
   cudaEventCreate(&start);
   cudaEventCreate(&stop);
@@ -224,6 +237,7 @@ int main(int argc, char **argv) {
     totalTime_ms += elapsedTime_ms;
   }
 
+  // calculate avg time and gflops
   float avgTime_ms = totalTime_ms / repeats;
   float avgTime_s = avgTime_ms / 1000.0f;
   float avgTime_us = avgTime_ms * 1000.0f;
