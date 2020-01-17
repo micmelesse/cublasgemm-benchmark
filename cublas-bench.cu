@@ -191,6 +191,15 @@ int main(int argc, char **argv) {
   cudaEventCreate(&start);
   cudaEventCreate(&stop);
 
+  if (is_batched) {
+    std::cout << "transA,transB,M,N,K,alpha,lda,stride_a,ldb,stride_b,beta,ldc,"
+                 "stride_c,Batch_Count,cublas-Gflops,us"
+              << std::endl;
+  } else {
+    std::cout << "transA,transB,M,N,K,alpha,lda,ldb,beta,ldc,cublas-Gflops,us"
+              << std::endl;
+  }
+
   float totalTime_ms = 0.0;
   for (int rep = 0; rep < repeats; rep++) {
 
