@@ -122,7 +122,14 @@ int main(int argc, char **argv) {
 
   long long int stride_a, stride_b, stride_c;
   int batch;
-  int is_batched = result.count("batch");
+  int is_batched;
+
+  if (f == "gemm_strided_batched") {
+    is_batched = true;
+  } else {
+    is_batched = false;
+  }
+
   if (is_batched) {
     stride_a = result["stride_a"].as<long long int>();
     stride_b = result["stride_b"].as<long long int>();
