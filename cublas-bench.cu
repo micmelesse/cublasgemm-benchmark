@@ -78,7 +78,9 @@ int main(int argc, char **argv) {
   for (int i = 0; i < num_devices; i++) {
     cudaDeviceProp prop;
     cudaGetDeviceProperties(&prop, i);
-    std::cout << "Device " << i << ": " << prop.name << std::endl;
+    std::cout << "Device " << i << ": " << prop.name << ", "
+              << prop.clockRate / 1000 << " MHZ"
+              << ", " << prop.memoryClockRate / 1000 << " MHZ" << std::endl;
   }
 
   // parse input arguments

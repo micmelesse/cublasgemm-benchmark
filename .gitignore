@@ -5,4 +5,4 @@
 *.cubin
 *.fatbin
 build
-*_GFLOPS.txt
+*_GFLOPS*.txt
