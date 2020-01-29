@@ -19,6 +19,16 @@ Make sure your CUDA tool kit is setup (Your `nvcc` is on `$PATH`, shared librari
 
 Uncomment line 11 in `gemm.cu` and line 4 in `run.sh` to test float16 matrix multiplication (cublasHgemm) on Tesla P100 GPU. This needs CUDA 8.0.
 
+## Instructions for cublas_bench
+cublas_bench takes in rocblas_bench commands and executes them in CUDA to get corresponding GFLOPs and Timing info. 
+To use cublas_bench, follow the steps below.
+
+* make -f Makefile_cublas-bench
+* cd build
+* ./cublas-bench -f gemm -r f32_r --transposeA N --transposeB N -m 1024 -n 2048 -k 1024 --alpha 1 --lda 1024 --ldb 1024 --beta 0 --ldc 1024
+
+
+
 ## Example Testing  Result
 
 An example testing result can be found in [here](https://github.com/hma02/cublasgemm-benchmark/blob/master/example/output.txt).
