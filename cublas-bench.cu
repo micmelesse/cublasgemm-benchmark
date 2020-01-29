@@ -5,8 +5,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "cxxopts.hpp"
 #include "fp16_conversion.h"
+#include "third_party/cxxopts.hpp"
 
 using namespace std;
 
