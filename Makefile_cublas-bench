@@ -1,0 +1,19 @@
+CUDA_ARCH_FLAGS ?= -arch=compute_70
+CC_FLAGS += -lcublas
+# CC_FLAGS += -lcurand
+# CC_FLAGS += -Xptxas
+# CC_FLAGS += -v
+# CC_FLAGS += -O3
+CC_FLAGS += --std=c++11 $(CUDA_ARCH_FLAGS)
+BUILD_DIR=build
+
+EXE = cublas-bench
+
+all: $(EXE)
+
+% : %.cu
+	mkdir -p $(BUILD_DIR)
+	nvcc $< $(CC_FLAGS) $(LIB_FLAGS) -o $(BUILD_DIR)/$@
+
+clean:
+	rm -rf $(BUILD_DIR)
