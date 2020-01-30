@@ -9,17 +9,20 @@ if [ ! "$BASH_VERSION" ]; then
     exit 1
 fi
 
-# add data path
-DATA_PATH=$(pwd)/data/rocblas_log_bench_bert_512_hist.csv
-OUTPUT_PATH="${DATA_PATH%.*}_Nvidia_GFLOPS.txt"
-
 # set flags
 export CUDA_VISIBLE_DEVICES=0 # choose gpu
 
+# add data path
+DATA_PATH=$(pwd)/data/rocblas_log_bench_bert_512_hist.csv
+
 # run cublas-bench commands
 cd build # switch to cublas-bench directory
-while IFS= read -r line; do
-    FILTERED_LINE=$(echo $line | grep -oP "./rocblas-bench.*\d")
-    CUBLAS_BENCH_COMMAND="${FILTERED_LINE//rocblas-bench/cublas-bench}"
-    source <(echo $CUBLAS_BENCH_COMMAND)
-done <"$DATA_PATH" >"$OUTPUT_PATH"
+
+for i in 1 2 3 4 5; do
+    OUTPUT_PATH="${DATA_PATH%.*}_Nvidia_GFLOPS_$i.txt"
+    while IFS= read -r line; do
+        FILTERED_LINE=$(echo $line | grep -oP "./rocblas-bench.*\d")
+        CUBLAS_BENCH_COMMAND="${FILTERED_LINE//rocblas-bench/cublas-bench}"
+        source <(echo $CUBLAS_BENCH_COMMAND --iters 100)
+    done <"$DATA_PATH" >"$OUTPUT_PATH"
+done

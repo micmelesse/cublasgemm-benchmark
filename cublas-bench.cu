@@ -102,6 +102,7 @@ int main(int argc, char **argv) {
   opp_adder("stride_b", "stride_c", cxxopts::value<long long int>());
   opp_adder("stride_c", "stride_c", cxxopts::value<long long int>());
   opp_adder("batch", "batch", cxxopts::value<int>());
+  opp_adder("iters", "iters", cxxopts::value<int>()->default_value(10));
 
   auto result = options.parse(argc, argv);
 
