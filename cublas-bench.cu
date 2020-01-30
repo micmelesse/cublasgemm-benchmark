@@ -102,7 +102,7 @@ int main(int argc, char **argv) {
   opp_adder("stride_b", "stride_c", cxxopts::value<long long int>());
   opp_adder("stride_c", "stride_c", cxxopts::value<long long int>());
   opp_adder("batch", "batch", cxxopts::value<int>());
-  opp_adder("iters", "iters", cxxopts::value<int>()->default_value(10));
+  opp_adder("iters", "iters", cxxopts::value<int>()->default_value("10"));
 
   auto result = options.parse(argc, argv);
 
@@ -140,8 +140,8 @@ int main(int argc, char **argv) {
     batch = result["batch"].as<int>();
   }
 
-  // execute paramters
-  int repeats = 100;
+  // iterations for timing loop
+  int repeats = result["iters"].as<int>();
 
   cublasStatus_t stat;
   cublasHandle_t handle;
